@@ -1,4 +1,5 @@
 // import express from 'express'
+import { uploadCloud } from "../lib/cloudinary.js";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from 'bcrypt'
@@ -82,4 +83,36 @@ export const logout = async (req, res) => {
 		console.log('Logout error', error.message)
 		return res.status(500).json({'message': 'Internal Server Error'});
 	}
-}
+};
+
+export const update = async(req, res) => {
+	if(!req.user) {
+		return res.status(401).json({"message":"Unauthorised"});
+	}
+	const profilePic = req.body.profilePic;
+	if(!profilePic) {
+		res.status(401).json({"message": "Profile Picture not found"});
+	}
+	try {
+		var profilePicURL = await uploadCloud(profilePic);
+	}
+	catch (error) {
+		console.log("Cloudinary upload error: ", error.message);
+		return res.status(501).json({"message": "cloud upload error."})
+	}
+	if(!profilePicURL) {
+		return res.status(401).json({"message": "Invalid URL."})
+	}
+	try {
+		const updateduser = await User.findOneAndUpdate(
+			{_id : req.user._id}, 
+			{$set: {profilePic: profilePicURL}}, 
+			{new: true}
+		);
+		await updateduser.save();
+		return res.status(201).json(updateduser);
+	}
+	catch(error) {
+		return res.status(501).json({"message" : "Update Error."})
+	}
+};

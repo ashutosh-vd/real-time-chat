@@ -7,6 +7,8 @@ const app = express();
 dotenv.config();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 
 import authRoutes from './routes/auth.route.js'
