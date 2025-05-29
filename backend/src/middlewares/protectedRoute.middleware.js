@@ -17,7 +17,7 @@ export const protectedRoute = async (req , res , next) => {
 		return res.status(401).json({"message" : "Invalid Token"});
 	}
 
-	const user = await User.findOne({_id: decoded._id}).select("-password");
+	const user = await User.findOne({_id: decoded._id}).select("-password -messages");
 	if(!user) {
 		return res.status(404).json({"message":"User Not Found"});
 	}
