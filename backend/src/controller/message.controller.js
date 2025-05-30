@@ -28,7 +28,7 @@ export const getUsersForSidebar = async (req, res) => {
 		allUsers = [req.user];
 	}
 
-	return res.status(200).json({"message": "All users received."})
+	return res.status(200).json({allUsers})
 };
 
 export const getMessages = async (req, res) => {
@@ -47,7 +47,8 @@ export const getMessages = async (req, res) => {
 		}
 
 		const userToReceiverMessages = user.messages.filter((messageElement) => {
-			return (messageElement.receiver === receiverId);
+			console.log(messageElement);
+			return messageElement.receiver.equals(receiverId);
 		});
 		if(userToReceiverMessages === undefined) {
 			return res.status(404).json({"message": "MESSAGES NOT FOUND."});
