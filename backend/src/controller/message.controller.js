@@ -91,29 +91,17 @@ export const sendMessage = async (req, res) => {
 	}
 
 	try {
-		const newMessage = new Message({
+		const newMessage = await Message.create({
 			sender,
 			receiver,
 			text: text ? text.trim() : "",
 			image: imageUrl,
 		});
 
-		const savedMessage = await newMessage.save();
+		await User.updateOne({ _id: sender }, { $push: { messages: newMessage._id } });
+		await User.updateOne({ _id: receiver }, { $push: { messages: newMessage._id } });
 
-		const senderUser = await User.findById(sender);
-		const receiverUser = await User.findById(receiver);
-
-		if (!senderUser || !receiverUser) {
-			return res.status(404).json({ "message": "Sender or receiver not found." });
-		}
-
-		senderUser.messages.push(savedMessage._id);
-		receiverUser.messages.push(savedMessage._id);
-
-		await senderUser.save();
-		await receiverUser.save();
-
-		return res.status(201).json(savedMessage);
+		return res.status(201).json(newMessage);
 	} 
 	catch (error) {
 		console.log("Error saving message: ", error.message);
