@@ -46,18 +46,11 @@ export const getMessages = async (req, res) => {
 			res.status(401).json({"message": "no user found."})
 		}
 
-		const userToReceiverMessages = user.messages.filter((messageElement) => {
-			// console.log(messageElement);
-			return messageElement.receiver.equals(receiverId) || messageElement.sender.equals(receiverId);
-		});
-		if(userToReceiverMessages === undefined) {
-			return res.status(404).json({"message": "MESSAGES NOT FOUND."});
-		}
-		else if(userToReceiverMessages.length === 0) {
-			return res.status(201).json({"messages": []});
-		}
+		const allMessages = user.messages.filter((message) => {
+			return message.sender.equals(receiverId) || message.receiver.equals(receiverId);
+		})
 
-		return res.status(201).json({"messages": userToReceiverMessages});
+		return res.status(201).json({"messages": allMessages});
 	}
 	catch (error) {
 		res.status(500).json({"message": "Server Error."});
