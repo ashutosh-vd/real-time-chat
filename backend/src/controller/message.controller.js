@@ -47,8 +47,8 @@ export const getMessages = async (req, res) => {
 		}
 
 		const userToReceiverMessages = user.messages.filter((messageElement) => {
-			console.log(messageElement);
-			return messageElement.receiver.equals(receiverId);
+			// console.log(messageElement);
+			return messageElement.receiver.equals(receiverId) || messageElement.sender.equals(receiverId);
 		});
 		if(userToReceiverMessages === undefined) {
 			return res.status(404).json({"message": "MESSAGES NOT FOUND."});
