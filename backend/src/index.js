@@ -1,4 +1,6 @@
 import express from 'express';
+import http from "http";
+import { Server } from "socket.io"
 import dotenv from 'dotenv';
 import { connectDB } from './lib/db.js';
 import cookieParser from 'cookie-parser';
@@ -21,8 +23,25 @@ import messageRoutes from './routes/message.route.js'
 app.use('/api/auth', authRoutes);
 app.use('/api/message', messageRoutes);
 
+const server = http.createServer(app);
+
+// Socket upgrade 
+
+const io = new Server(server, {
+	cors : {
+		origin: [process.env.CORS_ORIGIN],
+	}
+});
+
+io.on("connect", (socket) => {
+	console.log("A user connected: " + socket.id)
+	socket.on("disconnect", () => {
+		console.log("user disconnected: " + socket.id);
+	})
+});
+
 const PORT = process.env.PORT;
-app.listen(PORT, async (error) => {
+server.listen(PORT, async (error) => {
 	if(error) {
 		console.log('express server connection error', error.message);
 		return;
