@@ -17,6 +17,12 @@ const MessageBody = () => {
     return () => unsubscribeToMessages();
   }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeToMessages]);
 
+  useEffect(() => {
+    if(messages.length) {
+      messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
 	if(isMessageLoading) {
 		return (
 			<MessageBodySkeleton />
