@@ -1,4 +1,5 @@
 import { uploadCloud } from "../lib/cloudinary.js";
+import { getIO, getSocketId } from "../lib/socket.js";
 import Message from "../models/message.model.js";
 import User from "../models/user.model.js";
 
@@ -106,6 +107,13 @@ export const sendMessage = async (req, res) => {
 		await senderUser.save();
 		await receiverUser.save();
 
+		//socket.io integration
+		const io = getIO();
+		const receiverSocketId = getSocketId(receiver);
+		if(receiverSocketId) {
+			//user online
+			io.to(receiverSocketId).emit("newMessage", savedMessage);
+		}
 		return res.status(201).json(savedMessage);
 	} 
 	catch (error) {

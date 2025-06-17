@@ -1,6 +1,7 @@
 import {create} from "zustand";
 import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast"
+import { useAuthStore } from "./useAuthStore.js";
 
 export const useChatStore = create((set, get) => ({
 	messages: [],
@@ -25,15 +26,16 @@ export const useChatStore = create((set, get) => ({
 		}
 	},
 
-	getMessages: async (data) => {
+	getMessages: async (selectedUserId) => {
 		set({isMessagesLoading: true});
+		if(!selectedUserId) return;
 		try{
-			const res = await axiosInstance(`/message/${data._id}/messages`);
+			const res = await axiosInstance(`/message/${selectedUserId}/messages`);
 			set({messages: res.data.messages});
 			// console.log("res: ", res);
 		}
 		catch (error) {
-			toast.error(error.response.data.message);
+			toast.error("error", error?.response?.data.message);
 		}
 		finally {
 			set({isMessagesLoading: false});
@@ -55,4 +57,25 @@ export const useChatStore = create((set, get) => ({
 			toast.error(error.response.data.message);
 		}
 	},
+
+	subscribeToMessages: () => {
+		if(!get().selectedUser) return;
+
+		const socket = useAuthStore.getState().socket;
+
+		socket.on("newMessage", (newMessage) => {
+			set({messages: [...get().messages, newMessage]});
+		});
+	},
+
+	unsubscribeToMessages: () => {
+		const selectedUser = get().selectedUser;
+		if (!selectedUser) return;
+
+		const socket = useAuthStore.getState().socket;
+		if (socket) {
+			socket.off("newMessage");
+		}
+	},
+
 }))

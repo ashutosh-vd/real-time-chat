@@ -3,11 +3,19 @@ import { useChatStore } from '../store/useChatStore.js'
 import MessageBodySkeleton from './skeletons/MessageBodySkeleton.jsx';
 import { useAuthStore } from '../store/useAuthStore.js';
 import { formatMessageTime } from '../lib/formatMessageTime.js';
+import { useEffect } from 'react';
 
 const MessageBody = () => {
-	const {selectedUser, isMessageLoading, messages} = useChatStore();
+	const {selectedUser, isMessageLoading, messages, getMessages, subscribeToMessages, unsubscribeToMessages} = useChatStore();
 	const { authUser } = useAuthStore();
 	const messageEndRef = useRef(null);
+
+  useEffect(() => {
+    getMessages(selectedUser._id);
+    subscribeToMessages();
+
+    return () => unsubscribeToMessages();
+  }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeToMessages]);
 
 	if(isMessageLoading) {
 		return (
