@@ -1,9 +1,17 @@
-import React, { useState } from 'react'
-import { useAuthStore } from '../store/useAuthStore.js';
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from 'lucide-react';
-import { Link } from "react-router-dom"
-import ImagePattern from '../components/ImagePattern.jsx';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { useAuthStore } from "../store/useAuthStore.js";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  MessageSquare,
+  User,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import ImagePattern from "../components/ImagePattern.jsx";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,32 +21,33 @@ const SignUpPage = () => {
     password: "",
   });
 
-  const {signUp , isSigningUp} = useAuthStore(); 
+  const { signUp, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
     console.log(formData);
-    if(!formData.fullname.trim()) return toast.error("Full name cannot be empty.");
-    if(formData.password.length < 6) return toast.error("Minimum password length must be 6.");
-    if(!formData.email.trim()) return toast.error("Email cannoot be empty.");
-    if(!formData.password) return toast.error("Password cannot be empty");
-    if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
+    if (!formData.fullname.trim())
+      return toast.error("Full name cannot be empty.");
+    if (formData.password.length < 6)
+      return toast.error("Minimum password length must be 6.");
+    if (!formData.email.trim()) return toast.error("Email cannoot be empty.");
+    if (!formData.password) return toast.error("Password cannot be empty");
+    if (!/\S+@\S+\.\S+/.test(formData.email))
+      return toast.error("Invalid email format");
     // how???
     return true;
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if(validateForm()===true) signUp(formData);
+    if (validateForm() === true) signUp(formData);
   };
   return (
-	<div className='min-h-screen grid lg:grid-cols-2'>
-    {/* left */}
-    <div className="flex flex-col justify-center items-center p-6 sm:p-12">
-
-      <div className="w-full max-w-md space-y-8">
-        
-        {/* logo and line */}
-        <div className="text-center mb-8">
+    <div className="min-h-screen grid lg:grid-cols-2">
+      {/* left */}
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+        <div className="w-full max-w-md space-y-8">
+          {/* logo and line */}
+          <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div
                 className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
@@ -47,13 +56,14 @@ const SignUpPage = () => {
                 <MessageSquare className="size-6 text-primary" />
               </div>
               <h1 className="text-2xl font-bold mt-2">Create Account</h1>
-              <p className="text-base-content/60">Get started with your free account</p>
+              <p className="text-base-content/60">
+                Get started with your free account
+              </p>
             </div>
-        </div>
+          </div>
 
-
-        {/* form */}
-        <form onSubmit={submitHandler} className="space-y-6">
+          {/* form */}
+          <form onSubmit={submitHandler} className="space-y-6">
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-medium">Full Name</span>
@@ -67,7 +77,9 @@ const SignUpPage = () => {
                   className={`input input-bordered focus:border-none mt-1 w-full pl-10`}
                   placeholder="John Doe"
                   value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullname: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullname: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -85,7 +97,9 @@ const SignUpPage = () => {
                   className={`input input-bordered focus:border-none mt-1 w-full pl-10`}
                   placeholder="you@example.com"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -103,7 +117,9 @@ const SignUpPage = () => {
                   className={`input input-bordered focus:border-none mt-1 w-full pl-10`}
                   placeholder="••••••••"
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                 />
                 <button
                   type="button"
@@ -119,7 +135,11 @@ const SignUpPage = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              disabled={isSigningUp}
+            >
               {isSigningUp ? (
                 <>
                   <Loader2 className="size-5 animate-spin z-2" />
@@ -139,20 +159,16 @@ const SignUpPage = () => {
               </Link>
             </p>
           </div>
-
+        </div>
       </div>
+
+      {/* right */}
+      <ImagePattern
+        title="Join our community"
+        subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
+      />
     </div>
+  );
+};
 
-
-
-    {/* right */}
-    <ImagePattern 
-    title="Join our community"
-    subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
-    />
-
-  </div>
-  )
-}
-
-export default SignUpPage
+export default SignUpPage;

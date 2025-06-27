@@ -1,5 +1,5 @@
 export const THEMES = [
-	"light",
+  "light",
   "dark",
   "cupcake",
   "bumblebee",

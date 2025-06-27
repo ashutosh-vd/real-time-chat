@@ -1,26 +1,26 @@
-import React, { useState } from 'react'
-import { Camera, Mail, User } from "lucide-react"
-import { useAuthStore } from '../store/useAuthStore.js'
+import React, { useState } from "react";
+import { Camera, Mail, User } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore.js";
 
 const ProfilePage = () => {
-  const {updateProfile, isUpdatingProfile, authUser} = useAuthStore();
-  const [selectedImg, setSelectedImage] = useState('');
+  const { updateProfile, isUpdatingProfile, authUser } = useAuthStore();
+  const [selectedImg, setSelectedImage] = useState("");
 
   const imageUploadHandler = async (e) => {
     const file = e.target.files[0];
-    if(!file) return;
+    if (!file) return;
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
       const base64Image = reader.result;
       setSelectedImage(base64Image);
-      await updateProfile({profilePic: base64Image});
+      await updateProfile({ profilePic: base64Image });
     };
   };
 
   return (
-	<div className="h-screen pt-20">
+    <div className="h-screen pt-20">
       <div className="max-w-2xl mx-auto p-4 py-8">
         <div className="bg-base-300 rounded-xl p-6 space-y-8">
           <div className="text-center">
@@ -59,7 +59,9 @@ const ProfilePage = () => {
               </label>
             </div>
             <p className="text-sm text-zinc-400">
-              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+              {isUpdatingProfile
+                ? "Uploading..."
+                : "Click the camera icon to update your photo"}
             </p>
           </div>
 
@@ -69,7 +71,9 @@ const ProfilePage = () => {
                 <User className="w-4 h-4" />
                 Full Name
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg">{authUser?.fullname}</p>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg">
+                {authUser?.fullname}
+              </p>
             </div>
 
             <div className="space-y-1.5">
@@ -77,7 +81,9 @@ const ProfilePage = () => {
                 <Mail className="w-4 h-4" />
                 Email Address
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg">{authUser?.email}</p>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg">
+                {authUser?.email}
+              </p>
             </div>
           </div>
 
@@ -97,7 +103,7 @@ const ProfilePage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;

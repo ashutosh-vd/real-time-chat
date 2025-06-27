@@ -1,56 +1,55 @@
-import React, { useRef, useState } from 'react'
-import { useChatStore } from '../store/useChatStore.js';
-import { Image, Send, X } from 'lucide-react';
-import toast from 'react-hot-toast';
+import React, { useRef, useState } from "react";
+import { useChatStore } from "../store/useChatStore.js";
+import { Image, Send, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 const MessageInput = () => {
-	const [text, setText] = useState("");
-	const [imagePreview, setImagePreview] = useState("");
-	const fileInputRef = useRef(null);
-	const {sendMessage} = useChatStore();
+  const [text, setText] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
+  const fileInputRef = useRef(null);
+  const { sendMessage } = useChatStore();
 
-	const handleImageChange =(e) => {
-		const file = e.target.files[0];
-		if(!file.type.startsWith("image/")) {
-			toast.error("file type not image");
-			return ;
-		}
-		const reader = new FileReader();
-		reader.onload = () => {
-			setImagePreview(reader.result);
-		};
-		reader.readAsDataURL(file);
-	};
-	
-	const removeImage = () => {
-		setImagePreview("");
-		// see how it works
-	};
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file.type.startsWith("image/")) {
+      toast.error("file type not image");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
-	const handleSendMessage = async (e) => {
-		e.preventDefault();
-		if(!imagePreview && !text.trim()) return;
+  const removeImage = () => {
+    setImagePreview("");
+    // see how it works
+  };
 
-		try {
-			await sendMessage({
-				text: text.trim(),
-				image: imagePreview,
-			})
-			setText("");
-			setImagePreview(null);
-			if (fileInputRef.current) {
-				fileInputRef.current.value = null;
-			}
-		}
-		catch(error) {
-			toast.error("message send error");
-			console.log(error);
-		}
-		return;
-	};
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!imagePreview && !text.trim()) return;
+
+    try {
+      await sendMessage({
+        text: text.trim(),
+        image: imagePreview,
+      });
+      setText("");
+      setImagePreview(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null;
+      }
+    } catch (error) {
+      toast.error("message send error");
+      console.log(error);
+    }
+    return;
+  };
 
   return (
-	<div className="p-4 w-full">
+    <div className="p-4 w-full">
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -106,7 +105,7 @@ const MessageInput = () => {
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default MessageInput
+export default MessageInput;
